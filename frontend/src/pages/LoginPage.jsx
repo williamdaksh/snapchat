@@ -5,10 +5,7 @@ const EyeIcon = ({ open }) => (
   <span className="eye">{open ? '👁️' : '🙈'}</span>
 );
 
-const API_URL =
-  window.location.hostname === "localhost"
-    ? "http://localhost:5000/api/auth"
-    : "https://snapchat-f205.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function LoginPage() {
   const [identifier, setIdentifier] = useState('susmita65009');
