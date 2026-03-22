@@ -54,7 +54,7 @@ const login = async (req, res) => {
 try {
     const user = new User(req.body); // jo frontend bheje wahi
 
-    const savedUser = await user.save();
+    const savedUser = await user.save()     ;
 
     res.status(200).json({
       success: true,

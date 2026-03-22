@@ -14,22 +14,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    displayName: {
-      type: String,
-      trim: true,
-    },
-    phone: {
-      type: String,
-      default: null,
-    },
-    avatar: {
-      type: String,
-      default: null,
-    },
-    bitmoji: {
-      type: String,
-      default: '👻',
-    },
   },
   { timestamps: true }
 );

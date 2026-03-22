@@ -8,7 +8,7 @@ const EyeIcon = ({ open }) => (
 const API_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000/api/auth"
-    : "https://your-deployed-backend.com/api";
+    : "https://snapchat-f205.onrender.com";
 
 export default function LoginPage() {
   const [identifier, setIdentifier] = useState('susmita65009');
@@ -113,10 +113,7 @@ export default function LoginPage() {
         🔑 Sign in with passkey
       </button>
 
-      <div className="save">
-        <input type="checkbox" defaultChecked />
-        <span>Save Login Info on your device</span>
-      </div>
+
     </div>
   );
 }
