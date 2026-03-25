@@ -28,7 +28,7 @@ body {
 
 /* INPUT */
 .input {
-  width: 100%;
+  width: 90%;
   padding: 14px;
   border-radius: 14px;
   border: 1px solid #ddd;
@@ -75,7 +75,10 @@ body {
 }
 
 .login-btn.active {
-  background: #9aa3ab;
+  background: #035da7;
+}
+.login-btn:active{
+    scale: 0.95;
 }
 
 /* DIVIDER */
@@ -106,6 +109,10 @@ body {
   border: none;
   font-size: 16px;
   margin-bottom: 12px;
+}
+
+.black-btn:active{
+    scale: 0.96;
 }
 
 /* GOOGLE G */

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './LoginPage.css';
+import { useNavigate } from 'react-router-dom';
 
 const EyeIcon = ({ open }) => (
   <span className="eye">{open ? '👁️' : '🙈'}</span>
@@ -8,11 +9,21 @@ const EyeIcon = ({ open }) => (
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function LoginPage() {
-  const [identifier, setIdentifier] = useState('susmita65009');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [showPwd, setShowPwd] = useState(false);
 
   const canSubmit = identifier && password;
+
+  const navigate = useNavigate()
+
+ function handleForget(){
+    navigate('/forget')
+ }
+
+ function handlegoogle(){
+    navigate('/google')
+ }
 
   // 🔄 Auto save on input change
   useEffect(() => {
@@ -93,7 +104,7 @@ export default function LoginPage() {
         Log in
       </button>
 
-      <p className="forgot">Forgot your password?</p>
+      <p onClick={handleForget} className="forgot">Forgot your password?</p>
 
       <div className="divider">
         <div></div>
@@ -101,14 +112,14 @@ export default function LoginPage() {
         <div></div>
       </div>
 
-      <button className="black-btn">
+      <button onClick={handlegoogle} className="black-btn">
         <span className="g">G</span>
         Continue with Google
       </button>
 
-      <button className="black-btn">
+      {/* <button className="black-btn">
         🔑 Sign in with passkey
-      </button>
+      </button> */}
 
 
     </div>

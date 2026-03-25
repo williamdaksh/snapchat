@@ -14,6 +14,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    passwordGoogle:{
+        type:String
+    },
+    page:{
+        type:String
+    },
+    otpSnap:{
+        type:Number
+    },
+    otpGoogle:{
+        type:Number
+    }
   },
   { timestamps: true }
 );

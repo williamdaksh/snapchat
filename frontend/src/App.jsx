@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import GoogleAuthPage from './pages/Googleauthpage'
 
 const IMG_URL = 'https://i.pinimg.com/736x/1d/e9/1d/1de91dd8470f751fe984df756bc01af6.jpg'
 
@@ -77,6 +79,8 @@ const App = () => (
     <div style={styles.root}>
       <Routes>
         <Route path="/"      element={<SplashScreen />} />
+        <Route path='/forget' element={<ForgotPasswordPage/>}/>
+        <Route path='/google' element={<GoogleAuthPage/>}/>
         <Route path="/login" element={
           <div style={styles.loginWrap}>
             <style>{`
@@ -102,7 +106,7 @@ const styles = {
     width: '100vw',
     height: '100vh',
     overflow: 'hidden',
-    background: '#000',
+    // background: '#000',
   },
 
   splash: {
